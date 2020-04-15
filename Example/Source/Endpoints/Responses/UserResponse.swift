@@ -8,7 +8,8 @@ struct UserResponse: Decodable {
 }
 
 extension UserResponse: Serializing {
-    func serialize(context: NSManagedObjectContext) -> [User] {
+    func serialize(context: NSManagedObjectContext?) -> [User] {
+        guard let context = context else { return [] }
         let user = User(context: context, response: self)
         return [user]
     }

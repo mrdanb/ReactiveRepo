@@ -37,6 +37,7 @@
 		0130AD6924476A5F008F1C5C /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6824476A5F008F1C5C /* UserResponse.swift */; };
 		0130AD6E2447710E008F1C5C /* AnyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6D2447710E008F1C5C /* AnyRepository.swift */; };
 		0130AD7024477352008F1C5C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0130AD6F24477352008F1C5C /* README.md */; };
+		0130AD732447C27B008F1C5C /* InMemoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD712447C244008F1C5C /* InMemoryRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 		0130AD6824476A5F008F1C5C /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 		0130AD6D2447710E008F1C5C /* AnyRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyRepository.swift; sourceTree = "<group>"; };
 		0130AD6F24477352008F1C5C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		0130AD712447C244008F1C5C /* InMemoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				0130AD392447652B008F1C5C /* CoreDataRepository.swift */,
+				0130AD712447C244008F1C5C /* InMemoryRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 				0130AD4A2447652B008F1C5C /* Changes.swift in Sources */,
 				0130AD4B2447652B008F1C5C /* Repository.swift in Sources */,
 				0130AD4E2447652B008F1C5C /* CoreDataRepository.swift in Sources */,
+				0130AD732447C27B008F1C5C /* InMemoryRepository.swift in Sources */,
 				0130AD512447652B008F1C5C /* Notification+ManagedObjects.swift in Sources */,
 				0130AD582447652B008F1C5C /* NSManagedObjectContext+Fetching.swift in Sources */,
 				0130AD4D2447652B008F1C5C /* Serializer.swift in Sources */,
