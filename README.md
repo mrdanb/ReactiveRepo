@@ -41,7 +41,7 @@ let source = HTTPSource(baseURL: url)
 // For this example we are using `Response` and `User` in your implementation these might be different.
 //
 // As well as the response and entity types you will need to provide a `NSPersistentContainer`
-// and the `HTTPSource` we created earlier.
+// and the `HTTPSource` we created above.
 repository = CoreDataRepository<Response, User>(persistentContainer: Dependencies.shared.persistentContainer,
                                                 source: source).eraseToAnyRepository()
 ```
@@ -54,7 +54,7 @@ When you ask the Repository to `sync` it does the following:
 * Serializes the response to your  `Entity` type
 * Stores the results
 
-The resulting type from a `sync` is  a `Changes` object. The `Changes` type lists everything that  has been inserted, updated or deleted in during the sync. See [Changes](#Changes)
+The resulting type from a `sync` is  a `Changes` object. The `Changes` type lists everything that  has been inserted, updated or deleted during the sync. See [Changes](#Changes)
 
 ```swift
 let repository: AnyRepository<Response, User> = …
@@ -89,7 +89,7 @@ extension UserResponse: Serializing {
     }
 }
 ```
-Once the entitys has  been created return an array of the newly created objects. 
+Once the entites have been created return an array of the newly created objects. 
 
 ## ⬇️ Fetching
 Performing a fetch will return all objects in the repository.
@@ -98,6 +98,7 @@ You can also pass in a predicate to query the repository for a subset of your en
 ```swift
 let repository: AnyRepository<Response, User> = …
 
+// Fetch all users
 cancellable = repository.get().sink(receiveCompletion: { result in
     switch result {
     case .failure(let error):
@@ -109,6 +110,7 @@ cancellable = repository.get().sink(receiveCompletion: { result in
     print(users)
 })
 
+// Fetch premium users
 cancellable = repository.get(predicate: NSPredicate(format: "isPremium = true)).sink(receiveCompletion: { result in
     switch result {
     case .failure(let error):
@@ -122,7 +124,7 @@ cancellable = repository.get(predicate: NSPredicate(format: "isPremium = true)).
 ```
 
 ## 🗑 Deleting
-To delete an item you can calll the `delete(item:)` method and passing in the entity you would like to remove from the repository. 
+To delete an item you can calll the `delete(item:)` method and pass in the entity you would like to removed from the repository. 
 ```swift
 let repository: AnyRepository<Response, User> = …
 
@@ -141,8 +143,10 @@ cancellable = repository.delete(item: user).sink(receiveCompletion: { result in
 
 ## Chaining 🔗
 As `ReactiveRepo` is built on top of Swift Combine you get the powerful advantages that come with the Combine operators. 
+
 Where Combine really shines is when using operations in combination. The same is true for  `ReactiveRepo`.
-Here's an examples of how you might chain some common repository operations:
+
+Here's an example of how you might chain some common repository operations:
 ```swift
 // Delete user with name "Jim"
 cancellable =
