@@ -5,7 +5,7 @@ import CoreData
 
 class ViewController: UIViewController {
 
-    var repository: CoreDataRepository<UserResponse, User>?
+    var repository: AnyRepository<UserResponse, User>?
     private var cancellable: AnyCancellable?
 
     override func viewDidLoad() {
@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         // As well as the response and entity types you will need to provide a `NSPersistentContainer`
         // and the `HTTPSource` we created earlier.
         repository = CoreDataRepository<UserResponse, User>(persistentContainer: Dependencies.shared.persistentContainer,
-                                                            source: source)
+                                                            source: source).eraseToAnyRepository()
     }
 
     private func fetch() {

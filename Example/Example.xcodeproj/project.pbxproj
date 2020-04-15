@@ -35,6 +35,7 @@
 		0130AD6324476668008F1C5C /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6224476668008F1C5C /* Dependencies.swift */; };
 		0130AD6624476694008F1C5C /* ReactiveRepoExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6424476694008F1C5C /* ReactiveRepoExample.xcdatamodeld */; };
 		0130AD6924476A5F008F1C5C /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6824476A5F008F1C5C /* UserResponse.swift */; };
+		0130AD6E2447710E008F1C5C /* AnyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6D2447710E008F1C5C /* AnyRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,7 @@
 		0130AD6224476668008F1C5C /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		0130AD6524476694008F1C5C /* ReactiveRepoExample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ReactiveRepoExample.xcdatamodel; sourceTree = "<group>"; };
 		0130AD6824476A5F008F1C5C /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
+		0130AD6D2447710E008F1C5C /* AnyRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 		0130AD322447652B008F1C5C /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				0130AD6C244770F6008F1C5C /* Erasure */,
 				0130AD332447652B008F1C5C /* Source.swift */,
 				0130AD342447652B008F1C5C /* Changes.swift */,
 				0130AD352447652B008F1C5C /* Repository.swift */,
@@ -266,6 +269,14 @@
 				0130AD6824476A5F008F1C5C /* UserResponse.swift */,
 			);
 			path = Responses;
+			sourceTree = "<group>";
+		};
+		0130AD6C244770F6008F1C5C /* Erasure */ = {
+			isa = PBXGroup;
+			children = (
+				0130AD6D2447710E008F1C5C /* AnyRepository.swift */,
+			);
+			path = Erasure;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -385,6 +396,7 @@
 				0130AD552447652B008F1C5C /* NSManagedObjectContext+Tasks.swift in Sources */,
 				0130AD522447652B008F1C5C /* NSManagedObjectContext+Creating.swift in Sources */,
 				0130AD542447652B008F1C5C /* NSManagedObjectContext+Inserting.swift in Sources */,
+				0130AD6E2447710E008F1C5C /* AnyRepository.swift in Sources */,
 				0130AD4A2447652B008F1C5C /* Changes.swift in Sources */,
 				0130AD4B2447652B008F1C5C /* Repository.swift in Sources */,
 				0130AD4E2447652B008F1C5C /* CoreDataRepository.swift in Sources */,
