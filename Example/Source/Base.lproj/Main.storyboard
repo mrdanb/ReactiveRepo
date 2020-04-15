@@ -16,20 +16,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Mb6-cd-qpv">
-                                <rect key="frame" x="187.5" y="423" width="39" height="60"/>
+                                <rect key="frame" x="184.5" y="408" width="45" height="90"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQe-o4-mdH">
-                                        <rect key="frame" x="0.0" y="0.0" width="39" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="45" height="30"/>
                                         <state key="normal" title="Sync"/>
                                         <connections>
                                             <action selector="performSync:" destination="BYZ-38-t0r" eventType="touchUpInside" id="b72-2o-uRi"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eaM-y2-P5V">
-                                        <rect key="frame" x="0.0" y="30" width="39" height="30"/>
+                                        <rect key="frame" x="0.0" y="30" width="45" height="30"/>
                                         <state key="normal" title="Fetch"/>
                                         <connections>
                                             <action selector="performFetch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XaH-r4-zrt"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xro-Uu-maF">
+                                        <rect key="frame" x="0.0" y="60" width="45" height="30"/>
+                                        <state key="normal" title="Delete"/>
+                                        <connections>
+                                            <action selector="performDelete:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8Li-Zl-5Xh"/>
                                         </connections>
                                     </button>
                                 </subviews>

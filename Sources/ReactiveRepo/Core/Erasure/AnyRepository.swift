@@ -14,7 +14,7 @@ public struct AnyRepository<Response,Entity>: Repository {
         _add = repository.add
     }
 
-    public func get(predicate: NSPredicate?) -> AnyPublisher<[Entity], Error> {
+    public func get(predicate: NSPredicate? = nil) -> AnyPublisher<[Entity], Error> {
         return _get(predicate)
     }
 

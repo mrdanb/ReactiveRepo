@@ -5,7 +5,7 @@ import CoreData
 
 class ViewController: UIViewController {
 
-    var repository: AnyRepository<UserResponse, User>?
+    var repository: AnyRepository<UserResponse, User>!
     private var cancellable: AnyCancellable?
 
     override func viewDidLoad() {
@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     }
 
     private func fetch() {
-        cancellable = repository?.get(predicate: nil).sink(receiveCompletion: { result in
+        cancellable = repository.get().sink(receiveCompletion: { result in
             switch result {
             case .failure(let error):
                 print("Failed to fetch: \(error.localizedDescription)")
@@ -43,7 +43,7 @@ class ViewController: UIViewController {
     }
 
     private func sync() {
-        cancellable = repository?.sync(from: Endpoints.user.path).sink(receiveCompletion: { result in
+        cancellable = repository.sync(from: Endpoints.user.path).sink(receiveCompletion: { result in
             switch result {
             case .failure(let error):
                 print("Failed to sync: \(error.localizedDescription)")
@@ -55,12 +55,34 @@ class ViewController: UIViewController {
         })
     }
 
+    private func delete() {
+        cancellable =
+            repository.get()
+            .compactMap { $0.first }
+            .flatMap { user -> AnyPublisher<User, Error> in
+                return self.repository.delete(item: user)
+            }.sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Failed to delete: \(error.localizedDescription)")
+                case .finished:
+                    print("Finish delete")
+                }
+            }, receiveValue: { deleted in
+                print(deleted)
+            })
+    }
+
     @IBAction func performSync(_ sender: UIButton) {
         sync()
     }
 
     @IBAction func performFetch(_ sender: UIButton) {
         fetch()
+    }
+
+    @IBAction func performDelete(_ sender: UIButton) {
+        delete()
     }
 }
 

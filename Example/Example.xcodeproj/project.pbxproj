@@ -36,6 +36,7 @@
 		0130AD6624476694008F1C5C /* ReactiveRepoExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6424476694008F1C5C /* ReactiveRepoExample.xcdatamodeld */; };
 		0130AD6924476A5F008F1C5C /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6824476A5F008F1C5C /* UserResponse.swift */; };
 		0130AD6E2447710E008F1C5C /* AnyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6D2447710E008F1C5C /* AnyRepository.swift */; };
+		0130AD7024477352008F1C5C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0130AD6F24477352008F1C5C /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,7 @@
 		0130AD6524476694008F1C5C /* ReactiveRepoExample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ReactiveRepoExample.xcdatamodel; sourceTree = "<group>"; };
 		0130AD6824476A5F008F1C5C /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 		0130AD6D2447710E008F1C5C /* AnyRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyRepository.swift; sourceTree = "<group>"; };
+		0130AD6F24477352008F1C5C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 		0130AD0224476443008F1C5C = {
 			isa = PBXGroup;
 			children = (
+				0130AD6F24477352008F1C5C /* README.md */,
 				0130AD0D24476443008F1C5C /* Source */,
 				0130AD0C24476443008F1C5C /* Products */,
 				0130AD2D24476516008F1C5C /* Frameworks */,
@@ -361,6 +364,7 @@
 			files = (
 				0130AD1B24476445008F1C5C /* LaunchScreen.storyboard in Resources */,
 				0130AD1824476445008F1C5C /* Assets.xcassets in Resources */,
+				0130AD7024477352008F1C5C /* README.md in Resources */,
 				0130AD1624476443008F1C5C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
