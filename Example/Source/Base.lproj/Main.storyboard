@@ -15,18 +15,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQe-o4-mdH">
-                                <rect key="frame" x="190" y="438" width="34" height="30"/>
-                                <state key="normal" title="Sync"/>
-                                <connections>
-                                    <action selector="performSync:" destination="BYZ-38-t0r" eventType="touchUpInside" id="b72-2o-uRi"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Mb6-cd-qpv">
+                                <rect key="frame" x="187.5" y="423" width="39" height="60"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQe-o4-mdH">
+                                        <rect key="frame" x="0.0" y="0.0" width="39" height="30"/>
+                                        <state key="normal" title="Sync"/>
+                                        <connections>
+                                            <action selector="performSync:" destination="BYZ-38-t0r" eventType="touchUpInside" id="b72-2o-uRi"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eaM-y2-P5V">
+                                        <rect key="frame" x="0.0" y="30" width="39" height="30"/>
+                                        <state key="normal" title="Fetch"/>
+                                        <connections>
+                                            <action selector="performFetch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XaH-r4-zrt"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="AQe-o4-mdH" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="E3y-Ur-Z98"/>
-                            <constraint firstItem="AQe-o4-mdH" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="wXY-mc-H5s"/>
+                            <constraint firstItem="Mb6-cd-qpv" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="loU-lQ-zTn"/>
+                            <constraint firstItem="Mb6-cd-qpv" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="r2L-pb-bUl"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

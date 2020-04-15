@@ -31,9 +31,10 @@
 		0130AD572447652B008F1C5C /* NSManagedObject+Deleting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD472447652B008F1C5C /* NSManagedObject+Deleting.swift */; };
 		0130AD582447652B008F1C5C /* NSManagedObjectContext+Fetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD482447652B008F1C5C /* NSManagedObjectContext+Fetching.swift */; };
 		0130AD5D244765D8008F1C5C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD5C244765D8008F1C5C /* User.swift */; };
-		0130AD6024476606008F1C5C /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD5F24476606008F1C5C /* UserResponse.swift */; };
+		0130AD6024476606008F1C5C /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD5F24476606008F1C5C /* Endpoints.swift */; };
 		0130AD6324476668008F1C5C /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6224476668008F1C5C /* Dependencies.swift */; };
 		0130AD6624476694008F1C5C /* ReactiveRepoExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6424476694008F1C5C /* ReactiveRepoExample.xcdatamodeld */; };
+		0130AD6924476A5F008F1C5C /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6824476A5F008F1C5C /* UserResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,9 +86,10 @@
 		0130AD472447652B008F1C5C /* NSManagedObject+Deleting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Deleting.swift"; sourceTree = "<group>"; };
 		0130AD482447652B008F1C5C /* NSManagedObjectContext+Fetching.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Fetching.swift"; sourceTree = "<group>"; };
 		0130AD5C244765D8008F1C5C /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		0130AD5F24476606008F1C5C /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
+		0130AD5F24476606008F1C5C /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
 		0130AD6224476668008F1C5C /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		0130AD6524476694008F1C5C /* ReactiveRepoExample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ReactiveRepoExample.xcdatamodel; sourceTree = "<group>"; };
+		0130AD6824476A5F008F1C5C /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,7 +137,7 @@
 				0130AD1224476443008F1C5C /* ViewController.swift */,
 				0130AD6424476694008F1C5C /* ReactiveRepoExample.xcdatamodeld */,
 				0130AD612447665E008F1C5C /* Dependencies */,
-				0130AD5E244765F8008F1C5C /* Response */,
+				0130AD5E244765F8008F1C5C /* Endpoints */,
 				0130AD5B244765D8008F1C5C /* Model */,
 				0130AD1424476443008F1C5C /* Main.storyboard */,
 				0130AD1724476445008F1C5C /* Assets.xcassets */,
@@ -241,12 +243,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		0130AD5E244765F8008F1C5C /* Response */ = {
+		0130AD5E244765F8008F1C5C /* Endpoints */ = {
 			isa = PBXGroup;
 			children = (
-				0130AD5F24476606008F1C5C /* UserResponse.swift */,
+				0130AD5F24476606008F1C5C /* Endpoints.swift */,
+				0130AD6724476A52008F1C5C /* Responses */,
 			);
-			path = Response;
+			path = Endpoints;
 			sourceTree = "<group>";
 		};
 		0130AD612447665E008F1C5C /* Dependencies */ = {
@@ -255,6 +258,14 @@
 				0130AD6224476668008F1C5C /* Dependencies.swift */,
 			);
 			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		0130AD6724476A52008F1C5C /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				0130AD6824476A5F008F1C5C /* UserResponse.swift */,
+			);
+			path = Responses;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -352,7 +363,8 @@
 			files = (
 				0130AD6324476668008F1C5C /* Dependencies.swift in Sources */,
 				0130AD6624476694008F1C5C /* ReactiveRepoExample.xcdatamodeld in Sources */,
-				0130AD6024476606008F1C5C /* UserResponse.swift in Sources */,
+				0130AD6024476606008F1C5C /* Endpoints.swift in Sources */,
+				0130AD6924476A5F008F1C5C /* UserResponse.swift in Sources */,
 				0130AD5D244765D8008F1C5C /* User.swift in Sources */,
 				0130AD1324476443008F1C5C /* ViewController.swift in Sources */,
 				0130AD0F24476443008F1C5C /* AppDelegate.swift in Sources */,

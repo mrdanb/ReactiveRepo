@@ -26,16 +26,23 @@ public class CoreDataRepository<Response, Entity>: Repository
                                                selector: #selector(handleContextDidChange(_:)),
                                                name: .NSManagedObjectContextObjectsDidChange,
                                                object: persistentContainer.viewContext)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleContextDidSave(_:)),
+                                               name: .NSManagedObjectContextDidSave,
+                                               object: persistentContainer.viewContext)
     }
 
     @objc private func handleContextDidChange(_ notification: Notification) {
         let updates = notification.objects(for: NSUpdatedObjectsKey, type: Entity.self).filter { $0.hasPersistentChangedValues }
         updates.forEach { changes.update($0) }
+    }
 
+    @objc private func handleContextDidSave(_ notification: Notification) {
         let inserts = notification.objects(for: NSInsertedObjectsKey, type: Entity.self)
         inserts.forEach { changes.insert($0) }
 
-        let deletes = notification.objects(for: NSDeletedObjectsKey, type: Entity.self).filter { $0.hasPersistentChangedValues }
+        let deletes = notification.objects(for: NSDeletedObjectsKey, type: Entity.self)
         deletes.forEach { changes.delete($0) }
     }
 
