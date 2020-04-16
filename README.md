@@ -48,7 +48,8 @@ repository = CoreDataRepository<Response, User>(persistentContainer: Dependencie
 
 ### 📱 In-memory
 ```swift
-// 1. In order to setup an in-memory repository you only  need to provide a `Source`.
+// In order to setup an in-memory repository you only  need to provide a `Source`.
+//
 // This can be any implementation of `Source`. We could use the `HTTPSource` as in the example above.
 // Or, as in this example below, you can extend `UserDefaults` to implement ReactiveRepo's `Source` protocol.
 // This allows us to pass use `UserDefaults` with the in-memory repository.
