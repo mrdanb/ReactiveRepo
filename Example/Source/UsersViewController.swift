@@ -3,7 +3,7 @@ import Combine
 import ReactiveRepo
 import CoreData
 
-class ViewController: UIViewController {
+final class UsersViewController: UIViewController {
 
     var repository: AnyRepository<UserResponse, User>!
     private var cancellable: AnyCancellable?
@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
 
         // 2. Create a `Source` for your data. In this case we will use ReactiveRepo's `HTTPSource`.
-        let url = URL(string: "http://www.mocky.io/v2/")!
+        let url = URL(string: "http://www.mocky.io/v2")!
         let source = HTTPSource(baseURL: url)
 
         // 3. Initialize the repository.

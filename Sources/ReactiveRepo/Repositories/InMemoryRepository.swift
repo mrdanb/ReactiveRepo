@@ -12,7 +12,7 @@ public class InMemoryRepository<Response, Entity>: Repository
     private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.syncqueue")
     private lazy var store = [Entity]()
     
-    init(source: Source) {
+    public init(source: Source) {
         self.source = source
     }
 
@@ -28,7 +28,7 @@ public class InMemoryRepository<Response, Entity>: Repository
             .decode(type: Response.self, decoder: decoder)
             .map { response -> Changes<Entity> in
                 let snapshot = self.store
-                let newItems = response.serialize(context: nil)
+                let newItems = response.serialize(context: nil).filter { !self.store.contains($0) }
                 self.store.append(contentsOf: newItems)
                 return Changes(self.store.difference(from: snapshot))
             }

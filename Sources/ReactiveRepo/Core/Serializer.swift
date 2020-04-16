@@ -5,3 +5,9 @@ public protocol Serializing {
     associatedtype Serialized
     func serialize(context: Context?) -> [Serialized]
 }
+
+public extension Serializing {
+    func serialize(context: Any?) -> [Self] {
+        return [self]
+    }
+}

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0130AD0F24476443008F1C5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD0E24476443008F1C5C /* AppDelegate.swift */; };
 		0130AD1124476443008F1C5C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD1024476443008F1C5C /* SceneDelegate.swift */; };
-		0130AD1324476443008F1C5C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD1224476443008F1C5C /* ViewController.swift */; };
+		0130AD1324476443008F1C5C /* UsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD1224476443008F1C5C /* UsersViewController.swift */; };
 		0130AD1624476443008F1C5C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0130AD1424476443008F1C5C /* Main.storyboard */; };
 		0130AD1824476445008F1C5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0130AD1724476445008F1C5C /* Assets.xcassets */; };
 		0130AD1B24476445008F1C5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0130AD1924476445008F1C5C /* LaunchScreen.storyboard */; };
@@ -38,6 +38,9 @@
 		0130AD6E2447710E008F1C5C /* AnyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD6D2447710E008F1C5C /* AnyRepository.swift */; };
 		0130AD7024477352008F1C5C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0130AD6F24477352008F1C5C /* README.md */; };
 		0130AD732447C27B008F1C5C /* InMemoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0130AD712447C244008F1C5C /* InMemoryRepository.swift */; };
+		014F73EC24485CBF003E0DA7 /* ScoresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014F73EB24485CBF003E0DA7 /* ScoresViewController.swift */; };
+		014F73EE24485E22003E0DA7 /* Score.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014F73ED24485E22003E0DA7 /* Score.swift */; };
+		014F73F024486016003E0DA7 /* ScoresResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014F73EF24486016003E0DA7 /* ScoresResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +69,7 @@
 		0130AD0B24476443008F1C5C /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0130AD0E24476443008F1C5C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0130AD1024476443008F1C5C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0130AD1224476443008F1C5C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0130AD1224476443008F1C5C /* UsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersViewController.swift; sourceTree = "<group>"; };
 		0130AD1524476443008F1C5C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0130AD1724476445008F1C5C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0130AD1A24476445008F1C5C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -96,6 +99,9 @@
 		0130AD6D2447710E008F1C5C /* AnyRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyRepository.swift; sourceTree = "<group>"; };
 		0130AD6F24477352008F1C5C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		0130AD712447C244008F1C5C /* InMemoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryRepository.swift; sourceTree = "<group>"; };
+		014F73EB24485CBF003E0DA7 /* ScoresViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresViewController.swift; sourceTree = "<group>"; };
+		014F73ED24485E22003E0DA7 /* Score.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Score.swift; sourceTree = "<group>"; };
+		014F73EF24486016003E0DA7 /* ScoresResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +147,8 @@
 			children = (
 				0130AD0E24476443008F1C5C /* AppDelegate.swift */,
 				0130AD1024476443008F1C5C /* SceneDelegate.swift */,
-				0130AD1224476443008F1C5C /* ViewController.swift */,
+				0130AD1224476443008F1C5C /* UsersViewController.swift */,
+				014F73EB24485CBF003E0DA7 /* ScoresViewController.swift */,
 				0130AD6424476694008F1C5C /* ReactiveRepoExample.xcdatamodeld */,
 				0130AD612447665E008F1C5C /* Dependencies */,
 				0130AD5E244765F8008F1C5C /* Endpoints */,
@@ -248,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				0130AD5C244765D8008F1C5C /* User.swift */,
+				014F73ED24485E22003E0DA7 /* Score.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -273,6 +281,7 @@
 			isa = PBXGroup;
 			children = (
 				0130AD6824476A5F008F1C5C /* UserResponse.swift */,
+				014F73EF24486016003E0DA7 /* ScoresResponse.swift */,
 			);
 			path = Responses;
 			sourceTree = "<group>";
@@ -382,9 +391,12 @@
 				0130AD6324476668008F1C5C /* Dependencies.swift in Sources */,
 				0130AD6624476694008F1C5C /* ReactiveRepoExample.xcdatamodeld in Sources */,
 				0130AD6024476606008F1C5C /* Endpoints.swift in Sources */,
+				014F73F024486016003E0DA7 /* ScoresResponse.swift in Sources */,
 				0130AD6924476A5F008F1C5C /* UserResponse.swift in Sources */,
+				014F73EE24485E22003E0DA7 /* Score.swift in Sources */,
+				014F73EC24485CBF003E0DA7 /* ScoresViewController.swift in Sources */,
 				0130AD5D244765D8008F1C5C /* User.swift in Sources */,
-				0130AD1324476443008F1C5C /* ViewController.swift in Sources */,
+				0130AD1324476443008F1C5C /* UsersViewController.swift in Sources */,
 				0130AD0F24476443008F1C5C /* AppDelegate.swift in Sources */,
 				0130AD1124476443008F1C5C /* SceneDelegate.swift in Sources */,
 			);
