@@ -46,6 +46,27 @@ repository = CoreDataRepository<Response, User>(persistentContainer: Dependencie
                                                 source: source).eraseToAnyRepository()
 ```
 
+### 📱 In-memory
+```swift
+// 1. In order to setup an in-memory repository you only  need to provide a `Source`.
+// This can be any implementation of `Source`. We could use the `HTTPSource` as in the example above.
+// Or, as in this example below, you can extend `UserDefaults` to implement ReactiveRepo's `Source` protocol.
+// This allows us to pass use `UserDefaults` with the in-memory repository.
+
+let repository = InMemoryRepository<Response, Score>(source: UserDefaults.standard)
+
+extension UserDefaults: Source {
+    public func data(for key: String, parameters: [String : String]? = nil) -> AnyPublisher<Data, Error> {
+        guard let data = self.data(forKey: key) else {
+            return Fail(error: RepositoryError.objectNotFound).eraseToAnyPublisher()
+        }
+        return Just(data)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+}
+```
+
 ## 🔄 Syncing
 Syncing allows you to update your repository with data from a given source. 
 When you ask the Repository to `sync` it does the following:
@@ -72,7 +93,7 @@ cancellable = repository.sync(from: "/example-endpoint").sink(receiveCompletion:
 ```
 
 ### Serializing
-When setting up your repository, the `Response` type you provide must be a `Serializable` type. This means the `CoreDataRepository` can serialize the response in to the `Entity` your repository is handling.
+When setting up your repository, the `Response` type you provide must be a `Serializable` type. This means the repository can serialize the response in to the `Entity` your repository is handling.
 If your `Response` and `Entity` type are the same (i.e. you wish to store the response) you can use the default implementation. You can do this by simply adding the `Serializable` protocol to your type 
 ```swift
 extension UserResponse: Serializable { }
