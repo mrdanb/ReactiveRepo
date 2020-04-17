@@ -34,7 +34,8 @@ public class CoreDataRepository<Response, Entity>: Repository
     }
 
     @objc private func handleContextDidChange(_ notification: Notification) {
-        let updates = notification.objects(for: NSUpdatedObjectsKey, type: Entity.self).filter { $0.hasPersistentChangedValues }
+        let updates = notification.objects(for: NSUpdatedObjectsKey, type: Entity.self)
+            .filter { $0.hasPersistentChangedValues && !changes.updated.contains($0) }
         updates.forEach { changes.update($0) }
     }
 
@@ -42,7 +43,7 @@ public class CoreDataRepository<Response, Entity>: Repository
         let inserts = notification.objects(for: NSInsertedObjectsKey, type: Entity.self)
         inserts.forEach { changes.insert($0) }
 
-        let deletes = notification.objects(for: NSDeletedObjectsKey, type: Entity.self)
+    let deletes = notification.objects(for: NSDeletedObjectsKey, type: Entity.self)
         deletes.forEach { changes.delete($0) }
     }
 
