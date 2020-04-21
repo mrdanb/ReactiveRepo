@@ -42,16 +42,17 @@ fileprivate extension NSManagedObjectContext.PerformTaskPublisher {
         }
 
         func request(_ demand: Subscribers.Demand) {
-            context.perform {
+            context.perform { [weak self] in
                 do {
+                    guard let self = self else { return }
                     try self.task(self.context) { result in
                         _ = self.subscriber?.receive(result)
                         self.subscriber?.receive(completion: .finished)
                         self.cancel()
                     }
                 } catch {
-                    self.subscriber?.receive(completion: .failure(error))
-                    self.cancel()
+                    self?.subscriber?.receive(completion: .failure(error))
+                    self?.cancel()
                 }
             }
         }

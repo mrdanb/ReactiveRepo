@@ -12,7 +12,7 @@ public class CoreDataRepository<Response, Entity>: Repository
     private let persistentContainer: NSPersistentContainer
     private let source: Source
     private lazy var jsonDecoder = JSONDecoder()
-    private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.croupier.syncqueue")
+    private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.reactiverepo.syncqueue")
     private lazy var changes = Changes<Entity>()
 
     public init(persistentContainer: NSPersistentContainer, source: Source) {
@@ -70,7 +70,7 @@ public class CoreDataRepository<Response, Entity>: Repository
             .receive(on: syncQueue)
             .decode(type: Response.self, decoder: jsonDecoder)
             .flatMap { response -> AnyPublisher<[NSManagedObjectID], Error> in
-                self.persistentContainer.viewContext.createChildContext().performTask { (context, finished) in
+                return self.persistentContainer.viewContext.createChildContext().performTask { (context, finished) in
                     context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
                     let items = response.serialize(context:  context)
                     try context.save()
