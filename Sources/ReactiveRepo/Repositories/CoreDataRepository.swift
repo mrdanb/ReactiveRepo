@@ -12,7 +12,7 @@ public class CoreDataRepository<Response, Entity>: Repository
     private let persistentContainer: NSPersistentContainer
     private let source: Source
     private lazy var jsonDecoder = JSONDecoder()
-    private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.reactiverepo.syncqueue")
+    private lazy var syncQueue = DispatchQueue(label: "uk.co.danbennett.reactiverepo.syncqueue")
     private lazy var changes = Changes<Entity>()
 
     public init(persistentContainer: NSPersistentContainer, source: Source) {
@@ -47,25 +47,63 @@ public class CoreDataRepository<Response, Entity>: Repository
         deletes.forEach { changes.delete($0) }
     }
 
-    public func add(item: Entity) -> AnyPublisher<Entity, Error> {
-        return persistentContainer.viewContext
-            .insertObjectPublisher(item: item)
-            .eraseToAnyPublisher()
+    private func items(for key: String, in notification: Notification) -> [Entity] {
+        guard let userInfo = notification.userInfo else { return [] }
+        guard let objects = userInfo[key] as? Set<NSManagedObject> else { return [] }
+        return objects.compactMap { $0 as? Entity }
     }
+}
 
-    public func get(predicate: NSPredicate?) -> AnyPublisher<[Entity], Error> {
+// MARK: - Fetching
+public extension CoreDataRepository {
+    func get(predicate: NSPredicate) -> AnyPublisher<[Entity], Error> {
         return persistentContainer.viewContext
             .fetchPublisher(of: Entity.self, predicate: predicate)
             .eraseToAnyPublisher()
     }
 
-    public func delete(item: Entity) -> AnyPublisher<Entity, Error> {
+    func getAll() -> AnyPublisher<[Entity], Error> {
+        return persistentContainer.viewContext
+            .fetchPublisher(of: Entity.self)
+            .eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Deleting
+public extension CoreDataRepository {
+    func delete(item: Entity) -> AnyPublisher<Entity, Error> {
         return persistentContainer.viewContext
             .deletePublisher(item: item)
             .eraseToAnyPublisher()
     }
 
-    public func sync(from: String) -> AnyPublisher<Changes<Entity>, Error> {
+    func delete(predicate: NSPredicate) -> AnyPublisher<Int, Error> {
+        return persistentContainer.viewContext
+            .batchDeletePublisher(of: Entity.self, predicate: predicate)
+            .map { $0.count }
+            .eraseToAnyPublisher()
+    }
+
+    func deleteAll() -> AnyPublisher<Int, Error> {
+        persistentContainer.viewContext
+            .batchDeletePublisher(of: Entity.self)
+            .map { $0.count }
+            .eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Adding
+public extension CoreDataRepository {
+    func add(item: Entity) -> AnyPublisher<Entity, Error> {
+        return persistentContainer.viewContext
+            .insertObjectPublisher(item: item)
+            .eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Syncing
+public extension CoreDataRepository {
+    func sync(from: String) -> AnyPublisher<Changes<Entity>, Error> {
         return source.data(for: from, parameters: nil)
             .receive(on: syncQueue)
             .decode(type: Response.self, decoder: jsonDecoder)
@@ -84,11 +122,5 @@ public class CoreDataRepository<Response, Entity>: Repository
                 return self.changes
             }
             .eraseToAnyPublisher()
-    }
-
-    private func items(for key: String, in notification: Notification) -> [Entity] {
-        guard let userInfo = notification.userInfo else { return [] }
-        guard let objects = userInfo[key] as? Set<NSManagedObject> else { return [] }
-        return objects.compactMap { $0 as? Entity }
     }
 }

@@ -25,7 +25,7 @@ public extension NSManagedObjectContext {
     }
 }
 
-fileprivate extension NSManagedObjectContext.PerformTaskPublisher {
+private extension NSManagedObjectContext.PerformTaskPublisher {
     class Subscription<S>: Combine.Subscription
         where S: Subscriber,
         S.Input == Output,
