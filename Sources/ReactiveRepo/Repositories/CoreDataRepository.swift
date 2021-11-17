@@ -2,22 +2,19 @@ import Foundation
 import Combine
 import CoreData
 
-public class CoreDataRepository<Response, Entity>: Repository
-    where
-    Entity: NSManagedObject,
-    Response: Decodable & Serializing,
-    Response.Serialized == Entity,
-    Response.Context == NSManagedObjectContext {
+public class CoreDataRepository<Entity>: Repository where Entity: NSManagedObject {
 
-    private let persistentContainer: NSPersistentContainer
-    private let source: Source
+    private let context: NSManagedObjectContext
     private lazy var jsonDecoder = JSONDecoder()
     private lazy var syncQueue = DispatchQueue(label: "uk.co.danbennett.reactiverepo.syncqueue")
     private lazy var changes = Changes<Entity>()
 
-    public init(persistentContainer: NSPersistentContainer, source: Source) {
-        self.persistentContainer = persistentContainer
-        self.source = source
+    public convenience init(persistentContainer: NSPersistentContainer) {
+        self.init(context: persistentContainer.viewContext)
+    }
+
+    public init(context: NSManagedObjectContext) {
+        self.context = context
         addObservers()
     }
 
@@ -25,12 +22,12 @@ public class CoreDataRepository<Response, Entity>: Repository
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleContextDidChange(_:)),
                                                name: .NSManagedObjectContextObjectsDidChange,
-                                               object: persistentContainer.viewContext)
+                                               object: context)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleContextDidSave(_:)),
                                                name: .NSManagedObjectContextDidSave,
-                                               object: persistentContainer.viewContext)
+                                               object: context)
     }
 
     @objc private func handleContextDidChange(_ notification: Notification) {
@@ -57,13 +54,13 @@ public class CoreDataRepository<Response, Entity>: Repository
 // MARK: - Fetching
 public extension CoreDataRepository {
     func get(predicate: NSPredicate) -> AnyPublisher<[Entity], Error> {
-        return persistentContainer.viewContext
+        return context
             .fetchPublisher(of: Entity.self, predicate: predicate)
             .eraseToAnyPublisher()
     }
 
     func getAll() -> AnyPublisher<[Entity], Error> {
-        return persistentContainer.viewContext
+        return context
             .fetchPublisher(of: Entity.self)
             .eraseToAnyPublisher()
     }
@@ -72,20 +69,20 @@ public extension CoreDataRepository {
 // MARK: - Deleting
 public extension CoreDataRepository {
     func delete(item: Entity) -> AnyPublisher<Entity, Error> {
-        return persistentContainer.viewContext
+        return context
             .deletePublisher(item: item)
             .eraseToAnyPublisher()
     }
 
     func delete(predicate: NSPredicate) -> AnyPublisher<Int, Error> {
-        return persistentContainer.viewContext
+        return context
             .batchDeletePublisher(of: Entity.self, predicate: predicate)
             .map { $0.count }
             .eraseToAnyPublisher()
     }
 
     func deleteAll() -> AnyPublisher<Int, Error> {
-        persistentContainer.viewContext
+        return context
             .batchDeletePublisher(of: Entity.self)
             .map { $0.count }
             .eraseToAnyPublisher()
@@ -95,7 +92,7 @@ public extension CoreDataRepository {
 // MARK: - Adding
 public extension CoreDataRepository {
     func add(item: Entity) -> AnyPublisher<Entity, Error> {
-        return persistentContainer.viewContext
+        return context
             .insertObjectPublisher(item: item)
             .eraseToAnyPublisher()
     }
@@ -103,24 +100,13 @@ public extension CoreDataRepository {
 
 // MARK: - Syncing
 public extension CoreDataRepository {
-    func sync(from: String) -> AnyPublisher<Changes<Entity>, Error> {
-        return source.data(for: from, parameters: nil)
-            .receive(on: syncQueue)
-            .decode(type: Response.self, decoder: jsonDecoder)
-            .flatMap { response -> AnyPublisher<[NSManagedObjectID], Error> in
-                return self.persistentContainer.viewContext.createChildContext().performTask { (context, finished) in
-                    context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-                    let items = response.serialize(context:  context)
-                    try context.save()
-                    finished(items.map { $0.objectID })
-                }.eraseToAnyPublisher()
-            }
-            .receive(on: DispatchQueue.main)
-            .tryMap { _ -> Changes<Entity> in
-                self.changes.empty()
-                try self.persistentContainer.viewContext.saveIfNeeded()
-                return self.changes
-            }
-            .eraseToAnyPublisher()
+    func sync(task: @escaping (AnyRepository<Entity>) -> Void) -> AnyPublisher<Changes<Entity>, Error> {
+        return context.createChildContext().performTask { context, completion in
+            context.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
+            task(CoreDataRepository(context: context).eraseToAnyRepository())
+//            try self.context.save() // do we need this?
+            completion(self.changes)
+        }
+        .eraseToAnyPublisher()
     }
 }

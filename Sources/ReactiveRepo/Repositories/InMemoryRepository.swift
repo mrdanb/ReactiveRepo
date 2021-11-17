@@ -1,20 +1,10 @@
 import Foundation
 import Combine
 
-public class InMemoryRepository<Response, Entity>: Repository
-    where
-    Entity: Equatable,
-    Response: Serializing & Decodable,
-    Response.Serialized == Entity {
-
-    private let source: Source
+public class InMemoryRepository<Entity>: Repository where Entity: Equatable {
     private lazy var decoder = JSONDecoder()
     private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.syncqueue")
     private lazy var store = [Entity]()
-    
-    public init(source: Source) {
-        self.source = source
-    }
 }
 
 // MARK: - Fetching
@@ -71,17 +61,12 @@ public extension InMemoryRepository {
 
 // MARK: - Syncing
 public extension InMemoryRepository {
-    func sync(from: String) -> AnyPublisher<Changes<Entity>, Error> {
-        source.data(for: from, parameters: nil)
-            .receive(on: syncQueue)
-            .decode(type: Response.self, decoder: decoder)
-            .map { response -> Changes<Entity> in
-                let snapshot = self.store
-                let newItems = response.serialize(context: nil).filter { !self.store.contains($0) }
-                self.store.append(contentsOf: newItems)
-                return Changes(self.store.difference(from: snapshot))
-            }
-            .receive(on: DispatchQueue.main)
+    func sync(task: (AnyRepository<Entity>) -> Void) -> AnyPublisher<Changes<Entity>, Error> {
+        let snapshot = store
+        task(eraseToAnyRepository())
+        let changes = Changes(store.difference(from: snapshot))
+        return Just(changes)
+            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 }

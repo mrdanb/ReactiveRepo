@@ -1,9 +1,8 @@
 import Foundation
 import Combine
 
-public protocol Repository: Fetching, Syncing, Deleting, Adding {
+public protocol Repository: Fetching, Deleting, Adding, Syncable {
     associatedtype Entity
-    associatedtype Response
 }
 
 public protocol Fetching {
@@ -27,4 +26,9 @@ public protocol Deleting {
 public protocol Adding {
     associatedtype Entity
     func add(item: Entity) -> AnyPublisher<Entity, Error>
+}
+
+public protocol Syncable {
+    associatedtype Entity
+    func sync(task: @escaping (AnyRepository<Entity>) -> Void) -> AnyPublisher<Changes<Entity>, Error>
 }

@@ -1,23 +1,23 @@
 import Foundation
 import Combine
 
-public struct AnyRepository<Response,Entity>: Repository {
+public struct AnyRepository<Entity>: Repository {
     private let _get: (NSPredicate) -> AnyPublisher<[Entity], Error>
     private let _getAll: () -> AnyPublisher<[Entity], Error>
-    private let _sync: (String) -> AnyPublisher<Changes<Entity>, Error>
     private let _deleteWithEntity: (Entity) -> AnyPublisher<Entity, Error>
     private let _deleteWithPredicate: (NSPredicate) -> AnyPublisher<Int, Error>
     private let _deleteAll: () -> AnyPublisher<Int, Error>
     private let _add: (Entity) -> AnyPublisher<Entity, Error>
+    private let _sync: (@escaping (AnyRepository<Entity>) -> Void) -> AnyPublisher<Changes<Entity>, Error>
 
-    public init<R>(_ repository: R) where R: Repository, R.Entity == Entity, R.Response == Response {
+    public init<R>(_ repository: R) where R: Repository, R.Entity == Entity {
         _get = repository.get
         _getAll = repository.getAll
-        _sync = repository.sync
         _deleteWithEntity = repository.delete
         _deleteWithPredicate = repository.delete
         _deleteAll = repository.deleteAll
         _add = repository.add
+        _sync = repository.sync
     }
 
     public func get(predicate: NSPredicate) -> AnyPublisher<[Entity], Error> {
@@ -26,10 +26,6 @@ public struct AnyRepository<Response,Entity>: Repository {
 
     public func getAll() -> AnyPublisher<[Entity], Error> {
         return _getAll()
-    }
-
-    public func sync(from key: String) -> AnyPublisher<Changes<Entity>, Error> {
-        return _sync(key)
     }
 
     public func delete(item: Entity) -> AnyPublisher<Entity, Error> {
@@ -47,10 +43,14 @@ public struct AnyRepository<Response,Entity>: Repository {
     public func add(item: Entity) -> AnyPublisher<Entity, Error> {
         return _add(item)
     }
+
+    public func sync(task: @escaping (AnyRepository<Entity>) -> Void) -> AnyPublisher<Changes<Entity>, Error> {
+        return _sync(task)
+    }
 }
 
 public extension Repository {
-    func eraseToAnyRepository() -> AnyRepository<Response, Entity> {
+    func eraseToAnyRepository() -> AnyRepository<Entity> {
         return AnyRepository(self)
     }
 }
