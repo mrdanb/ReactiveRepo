@@ -2,9 +2,16 @@ import Foundation
 import Combine
 
 public class InMemoryRepository<Entity>: Repository where Entity: Equatable {
+    public typealias Create = () -> Entity
+
     private lazy var decoder = JSONDecoder()
     private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.syncqueue")
     private lazy var store = [Entity]()
+    private let create: Create
+
+    public init(create: @escaping Create) {
+        self.create = create
+    }
 }
 
 // MARK: - Fetching
@@ -57,6 +64,15 @@ public extension InMemoryRepository {
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
+
+    func create(configure: (Entity) -> Void) -> AnyPublisher<Entity, Error> {
+        let new = create()
+        configure(new)
+        store.append(new)
+        return Just(new)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
 }
 
 // MARK: - Syncing
@@ -67,6 +83,16 @@ public extension InMemoryRepository {
         let changes = Changes(store.difference(from: snapshot))
         return Just(changes)
             .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+
+    func sync<T>(task: @escaping (AnyRepository<Entity>) -> AnyPublisher<T, Error>) -> AnyPublisher<Changes<Entity>, Error> {
+        let snapshot = store
+        return task(eraseToAnyRepository())
+            .subscribe(on: syncQueue)
+            .map { (_: T) -> Changes<Entity> in
+                return Changes(self.store.difference(from: snapshot))
+            }
             .eraseToAnyPublisher()
     }
 }

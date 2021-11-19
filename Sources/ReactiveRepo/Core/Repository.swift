@@ -26,9 +26,10 @@ public protocol Deleting {
 public protocol Adding {
     associatedtype Entity
     func add(item: Entity) -> AnyPublisher<Entity, Error>
+    func create(configure: (Entity) -> Void) -> AnyPublisher<Entity, Error>
 }
 
 public protocol Syncable {
     associatedtype Entity
-    func sync(task: @escaping (AnyRepository<Entity>) -> Void) -> AnyPublisher<Changes<Entity>, Error>
+    func sync<T>(task: @escaping (AnyRepository<Entity>) -> AnyPublisher<T, Error>) -> AnyPublisher<Changes<Entity>, Error>
 }

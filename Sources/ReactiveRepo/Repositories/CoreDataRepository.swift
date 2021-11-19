@@ -96,17 +96,47 @@ public extension CoreDataRepository {
             .insertObjectPublisher(item: item)
             .eraseToAnyPublisher()
     }
+
+    func create(configure: (Entity) -> Void) -> AnyPublisher<Entity, Error> {
+        let new = Entity(entity: Entity.entity(), insertInto: context)
+        configure(new)
+        return context.saveIfNeededPublisher()
+            .map { _ in new } // do we need to obtain via objectID?
+            .eraseToAnyPublisher()
+    }
 }
 
 // MARK: - Syncing
 public extension CoreDataRepository {
-    func sync(task: @escaping (AnyRepository<Entity>) -> Void) -> AnyPublisher<Changes<Entity>, Error> {
-        return context.createChildContext().performTask { context, completion in
+    func sync<T>(task: @escaping (AnyRepository<Entity>) -> AnyPublisher<T, Error>) -> AnyPublisher<Changes<Entity>, Error> {
+        /*return context.createChildContext().performTaskMap { context in
             context.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
-            task(CoreDataRepository(context: context).eraseToAnyRepository())
-//            try self.context.save() // do we need this?
-            completion(self.changes)
+            return task(CoreDataRepository(context: context).eraseToAnyRepository())
         }
-        .eraseToAnyPublisher()
+        .subscribe(on: syncQueue)
+        .tryMap { (_: T) -> Changes<Entity> in
+            try self.context.save() // do we need this?
+            return self.changes
+        }
+        .eraseToAnyPublisher()*/
+
+        return context.childContextPublisher()
+            .subscribe(on: syncQueue)
+            .setFailureType(to: Error.self)
+            .flatMap { context -> AnyPublisher<Changes<Entity>, Error> in
+                context.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
+                return context.performTaskMap { context in
+                    return task(CoreDataRepository(context: context).eraseToAnyRepository())
+                }
+                .flatMap { _ in context.saveIfNeededPublisher() }
+                .receive(on: DispatchQueue.main)
+                .handleEvents(receiveOutput: { [unowned self] _ in
+                    self.changes.empty()
+                })
+                .flatMap { [unowned self]  _ in self.context.saveIfNeededPublisher() }
+                .map { [unowned self] _ in self.changes }
+                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
 }
