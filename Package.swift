@@ -5,7 +5,7 @@ let package = Package(
     name: "ReactiveRepo",
     platforms: [
         .iOS(.v13),
-        .macOS(.v10_12),
+        .macOS(.v10_15),
         .watchOS(.v3),
     ],
     products: [

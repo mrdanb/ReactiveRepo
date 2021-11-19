@@ -1,38 +1,127 @@
 import Foundation
 import Combine
 
-public struct AnyRepository<Response,Entity>: Repository {
-    private let _get: (NSPredicate?) -> AnyPublisher<[Entity], Error>
-    private let _sync: (String) -> AnyPublisher<Changes<Entity>, Error>
-    private let _delete: (Entity) -> AnyPublisher<Entity, Error>
-    private let _add: (Entity) -> AnyPublisher<Entity, Error>
-
-    public init<R>(_ repository: R) where R: Repository, R.Entity == Entity, R.Response == Response {
-        _get = repository.get
-        _sync = repository.sync
-        _delete = repository.delete
-        _add = repository.add
+class RepositoryBoxBase<Entity>: Repository {
+    func get(predicate: NSPredicate) -> AnyPublisher<[Entity], Error> {
+        fatalError("Abstract method call")
     }
 
-    public func get(predicate: NSPredicate? = nil) -> AnyPublisher<[Entity], Error> {
-        return _get(predicate)
+    func getAll() -> AnyPublisher<[Entity], Error> {
+        fatalError("Abstract method call")
     }
 
-    public func sync(from key: String) -> AnyPublisher<Changes<Entity>, Error> {
-        return _sync(key)
+    func delete(item: Entity) -> AnyPublisher<Entity, Error> {
+        fatalError("Abstract method call")
+    }
+
+    func delete(predicate: NSPredicate) -> AnyPublisher<Int, Error> {
+        fatalError("Abstract method call")
+    }
+
+    func deleteAll() -> AnyPublisher<Int, Error> {
+        fatalError("Abstract method call")
+    }
+
+    func add(item: Entity) -> AnyPublisher<Entity, Error> {
+        fatalError("Abstract method call")
+    }
+
+    func create(configure: (Entity) -> Void) -> AnyPublisher<Entity, Error> {
+        fatalError("Abstract method call")
+    }
+
+    func sync<T>(task: @escaping (AnyRepository<Entity>) -> AnyPublisher<T, Error>) -> AnyPublisher<Changes<Entity>, Error> {
+        fatalError("Abstract method call")
+    }
+}
+
+final class RepositoryBox<RepositoryType: Repository>: RepositoryBoxBase<RepositoryType.Entity> {
+    let base: RepositoryType
+
+    init(base: RepositoryType) {
+        self.base = base
+    }
+
+    override func get(predicate: NSPredicate) -> AnyPublisher<[RepositoryType.Entity], Error> {
+        return base.get(predicate: predicate)
+    }
+
+    override func getAll() -> AnyPublisher<[RepositoryType.Entity], Error> {
+        return base.getAll()
+    }
+
+    override func delete(item: Entity) -> AnyPublisher<Entity, Error> {
+        return base.delete(item: item)
+    }
+
+    override func delete(predicate: NSPredicate) -> AnyPublisher<Int, Error> {
+        return base.delete(predicate: predicate)
+    }
+
+    override func deleteAll() -> AnyPublisher<Int, Error> {
+        return base.deleteAll()
+    }
+
+    override func add(item: Entity) -> AnyPublisher<Entity, Error> {
+        return base.add(item: item)
+    }
+
+    override func create(configure: (Entity) -> Void) -> AnyPublisher<Entity, Error> {
+        return base.create(configure: configure)
+    }
+
+    override func sync<T>(task: @escaping (AnyRepository<Entity>) -> AnyPublisher<T, Error>) -> AnyPublisher<Changes<Entity>, Error> {
+        return base.sync(task: task)
+    }
+}
+
+public struct AnyRepository<Entity>: Repository {
+
+    let box: RepositoryBoxBase<Entity>
+
+    public init<R>(_ repository: R) where R: Repository, R.Entity == Entity {
+        if let erased = repository as? AnyRepository<Entity> {
+            box = erased.box
+        } else {
+            box = RepositoryBox(base: repository)
+        }
+    }
+
+    public func get(predicate: NSPredicate) -> AnyPublisher<[Entity], Error> {
+        return box.get(predicate: predicate)
+    }
+
+    public func getAll() -> AnyPublisher<[Entity], Error> {
+        return box.getAll()
     }
 
     public func delete(item: Entity) -> AnyPublisher<Entity, Error> {
-        return _delete(item)
+        return box.delete(item: item)
+    }
+
+    public func delete(predicate: NSPredicate) -> AnyPublisher<Int, Error> {
+        return box.delete(predicate: predicate)
+    }
+
+    public func deleteAll() -> AnyPublisher<Int, Error> {
+        return box.deleteAll()
     }
 
     public func add(item: Entity) -> AnyPublisher<Entity, Error> {
-        return _add(item)
+        return box.add(item: item)
+    }
+
+    public func create(configure: (Entity) -> Void) -> AnyPublisher<Entity, Error> {
+        return box.create(configure: configure)
+    }
+
+    public func sync<T>(task: @escaping (AnyRepository<Entity>) -> AnyPublisher<T, Error>) -> AnyPublisher<Changes<Entity>, Error> {
+        return box.sync(task: task)
     }
 }
 
 public extension Repository {
-    func eraseToAnyRepository() -> AnyRepository<Response, Entity> {
+    func eraseToAnyRepository() -> AnyRepository<Entity> {
         return AnyRepository(self)
     }
 }

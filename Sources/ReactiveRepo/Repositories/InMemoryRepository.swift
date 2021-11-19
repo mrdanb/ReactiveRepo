@@ -1,52 +1,98 @@
 import Foundation
 import Combine
 
-public class InMemoryRepository<Response, Entity>: Repository
-    where
-    Entity: Equatable,
-    Response: Serializing & Decodable,
-    Response.Serialized == Entity {
+public class InMemoryRepository<Entity>: Repository where Entity: Equatable {
+    public typealias Create = () -> Entity
 
-    private let source: Source
     private lazy var decoder = JSONDecoder()
-    private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.syncqueue")
+    private lazy var syncQueue = DispatchQueue(label: "uk.co.danbennett.syncqueue")
     private lazy var store = [Entity]()
-    
-    public init(source: Source) {
-        self.source = source
-    }
+    private let creator: Create
 
-    public func get(predicate: NSPredicate?) -> AnyPublisher<[Entity], Error> {
-        Just(store.filter { predicate?.evaluate(with: $0) ?? true })
+    public init(creator: @escaping Create) {
+        self.creator = creator
+    }
+}
+
+// MARK: - Fetching
+public extension InMemoryRepository {
+    func get(predicate: NSPredicate) -> AnyPublisher<[Entity], Error> {
+        Just(store.filter { predicate.evaluate(with: $0) })
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
-    public func sync(from: String) -> AnyPublisher<Changes<Entity>, Error> {
-        source.data(for: from, parameters: nil)
-            .receive(on: syncQueue)
-            .decode(type: Response.self, decoder: decoder)
-            .map { response -> Changes<Entity> in
-                let snapshot = self.store
-                let newItems = response.serialize(context: nil).filter { !self.store.contains($0) }
-                self.store.append(contentsOf: newItems)
-                return Changes(self.store.difference(from: snapshot))
-            }
-            .receive(on: DispatchQueue.main)
+    func getAll() -> AnyPublisher<[Entity], Error> {
+        return Just(store)
+            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
+}
 
-    public func delete(item: Entity) -> AnyPublisher<Entity, Error> {
+// MARK: - Deleting
+public extension InMemoryRepository {
+    func delete(item: Entity) -> AnyPublisher<Entity, Error> {
         store.removeAll { $0 == item }
         return Just(item)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
-    public func add(item: Entity) -> AnyPublisher<Entity, Error> {
+    func delete(predicate: NSPredicate) -> AnyPublisher<Int, Error> {
+        get(predicate: predicate)
+            .handleEvents(receiveOutput: { [unowned self] toDelete in
+                self.store.removeAll(where: { toDelete.contains($0) })
+            })
+            .map { $0.count }
+            .eraseToAnyPublisher()
+    }
+
+    func deleteAll() -> AnyPublisher<Int, Error> {
+        let deleted = store.count
+        store.removeAll()
+        return Just(deleted)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Adding
+public extension InMemoryRepository {
+    func add(item: Entity) -> AnyPublisher<Entity, Error> {
         store.append(item)
         return Just(item)
             .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+
+    func create(configure: (Entity) -> Void) -> AnyPublisher<Entity, Error> {
+        let new = creator()
+        configure(new)
+        store.append(new)
+        return Just(new)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Syncing
+public extension InMemoryRepository {
+    func sync(task: (AnyRepository<Entity>) -> Void) -> AnyPublisher<Changes<Entity>, Error> {
+        let snapshot = store
+        task(eraseToAnyRepository())
+        let changes = Changes(store.difference(from: snapshot))
+        return Just(changes)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+
+    func sync<T>(task: @escaping (AnyRepository<Entity>) -> AnyPublisher<T, Error>) -> AnyPublisher<Changes<Entity>, Error> {
+        let snapshot = store
+        return task(eraseToAnyRepository())
+            .subscribe(on: syncQueue)
+            .map { (_: T) -> Changes<Entity> in
+                return Changes(self.store.difference(from: snapshot))
+            }
             .eraseToAnyPublisher()
     }
 }
