@@ -5,7 +5,7 @@ public class InMemoryRepository<Entity>: Repository where Entity: Equatable {
     public typealias Create = () -> Entity
 
     private lazy var decoder = JSONDecoder()
-    private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.syncqueue")
+    private lazy var syncQueue = DispatchQueue(label: "uk.co.danbennett.syncqueue")
     private lazy var store = [Entity]()
     private let creator: Create
 
