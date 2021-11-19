@@ -7,10 +7,10 @@ public class InMemoryRepository<Entity>: Repository where Entity: Equatable {
     private lazy var decoder = JSONDecoder()
     private lazy var syncQueue = DispatchQueue(label: "uk.co.dollop.syncqueue")
     private lazy var store = [Entity]()
-    private let create: Create
+    private let creator: Create
 
-    public init(create: @escaping Create) {
-        self.create = create
+    public init(creator: @escaping Create) {
+        self.creator = creator
     }
 }
 
@@ -66,7 +66,7 @@ public extension InMemoryRepository {
     }
 
     func create(configure: (Entity) -> Void) -> AnyPublisher<Entity, Error> {
-        let new = create()
+        let new = creator()
         configure(new)
         store.append(new)
         return Just(new)

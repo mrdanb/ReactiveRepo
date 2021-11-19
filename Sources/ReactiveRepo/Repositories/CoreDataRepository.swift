@@ -109,17 +109,6 @@ public extension CoreDataRepository {
 // MARK: - Syncing
 public extension CoreDataRepository {
     func sync<T>(task: @escaping (AnyRepository<Entity>) -> AnyPublisher<T, Error>) -> AnyPublisher<Changes<Entity>, Error> {
-        /*return context.createChildContext().performTaskMap { context in
-            context.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
-            return task(CoreDataRepository(context: context).eraseToAnyRepository())
-        }
-        .subscribe(on: syncQueue)
-        .tryMap { (_: T) -> Changes<Entity> in
-            try self.context.save() // do we need this?
-            return self.changes
-        }
-        .eraseToAnyPublisher()*/
-
         return context.childContextPublisher()
             .subscribe(on: syncQueue)
             .setFailureType(to: Error.self)

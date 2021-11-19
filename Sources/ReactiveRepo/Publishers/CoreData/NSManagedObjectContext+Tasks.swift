@@ -112,9 +112,9 @@ private extension NSManagedObjectContext.PerformTaskMapPublisher {
                     self.cancellable = child
                         .sink { result in
                             self.subscriber?.receive(completion: result)
+                            self.cancel()
                         } receiveValue: { output in
                             _ = self.subscriber?.receive(output)
-                            self.cancel()
                         }
 
                 } catch {
